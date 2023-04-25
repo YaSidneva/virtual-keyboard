@@ -82,3 +82,7 @@ body {
 .key-ctrl {
     width: 65px;
 }
+
+.upper {
+    text-transform: uppercase;
+}

@@ -1,19 +1,4 @@
 const Keyboard = {
-  elements: {
-    main: null,
-    keysContainer: null,
-    keys: [],
-  },
-
-  /*eventHandlers: {
-    oninput: null,
-    onclose: null,
-  },*/
-
-  properties: {
-    value: "",
-    capsLock: false,
-  },
 
   init() {
     //Create textatea
@@ -25,7 +10,7 @@ const Keyboard = {
     const keyboard = document.createElement("div");
     keyboard.classList.add("keyboard");
     document.body.appendChild(keyboard);
-    keyboard.appendChild(this._createKeys())
+    keyboard.appendChild(this._createKeys());
   },
 
   //create keys
@@ -99,9 +84,6 @@ const Keyboard = {
       "→",
     ];
 
-    // Creates HTML for an icon
-   
-
     keyLayout.forEach((key) => {
       const keyElement = document.createElement("button");
       const insertLineBreak =
@@ -109,66 +91,61 @@ const Keyboard = {
 
       keyElement.setAttribute("type", "button");
       keyElement.classList.add("key");
+      const textarea = document.querySelector(".textarea");
+      keyElement.textContent = key;
 
       switch (key) {
-        default:
-          keyElement.textContent = key;
-
-          keyElement.addEventListener("click", () => {
-            this.properties.value += this.properties.capsLock
-              ? key.toUpperCase()
-              : key.toLowerCase();
-            //this._triggerEvent("oninput");
-          });
-
-          break;
-
         case "Backspace":
           keyElement.classList.add("key-caps-shift-back");
-          keyElement.innerHTML = "Backspace";
           keyElement.addEventListener("click", () => {
-            this.properties.value = this.properties.value.substring(
-              0,
-              this.properties.value.length - 1
-            );
-            //this._triggerEvent("oninput");
+            let chars = textarea.value.split("");
+            console.log(chars);
+            chars.pop();
+            textarea.value = chars.join("");
           });
-
-          break;
-
-        case "Caps Lock":
-          keyElement.classList.add(
-            "key-caps-shift-back"
-            //"keyboard__key--activatable"
-          );
-          keyElement.innerHTML = "Caps Lock";
-          keyElement.addEventListener("click", () => {
-            this._toggleCapsLock();
-            keyElement.classList.toggle(
-              //"keyboard__key--active",
-              this.properties.capsLock
-            );
-          });
-
           break;
 
         case "Enter":
           keyElement.classList.add("key-enter");
           keyElement.innerHTML = "ENTER";
           keyElement.addEventListener("click", () => {
-            this.properties.value += "\n";
-            //this._triggerEvent("oninput");
+            textarea.value += "\n";
           });
-
           break;
 
         case "Space":
           keyElement.classList.add("key-space");
-          //keyElement.innerHTML = createIconHTML("");
+          keyElement.innerHTML = "";
 
           keyElement.addEventListener("click", () => {
-            this.properties.value += " ";
-            //this._triggerEvent("oninput");
+            textarea.value += " ";
+          });
+          break;
+
+        case "Caps Lock":
+          keyElement.classList.add(
+            "key-caps-shift-back"
+          );
+          keyElement.innerHTML = "Caps Lock";
+          keyElement.classList.add("caps-lock-inactive")
+          keyElement.addEventListener("click", () => {
+            if (keyElement.classList.contains("caps-lock-active")) {
+              keyElement.classList.replace(
+                "caps-lock-active",
+                "caps-lock-inactive"
+              );
+              document.querySelectorAll(".key-letter").forEach((key) => {
+                key.classList.add("upper");
+              });
+            } else {
+              keyElement.classList.replace(
+                "caps-lock-inactive",
+                "caps-lock-active"
+              );
+              document.querySelectorAll(".key-letter").forEach((key) => {
+                key.classList.remove("upper");
+              });
+            }
           });
 
           break;
@@ -183,12 +160,20 @@ const Keyboard = {
           keyElement.innerHTML = "Tab";
           break;
 
-          case "Ctrl":
+        case "Ctrl":
           keyElement.classList.add("key-ctrl");
           keyElement.innerHTML = "Ctrl";
           break;
-      }
 
+        default:
+          keyElement.textContent = key;
+          keyElement.classList.add("key-letter");
+          keyElement.addEventListener("click", () => {
+            textarea.value += keyElement.innerText;
+          });
+
+          break;
+      }
       fragment.appendChild(keyElement);
 
       if (insertLineBreak) {
@@ -196,26 +181,7 @@ const Keyboard = {
       }
     });
     return fragment;
-  },
-
-  _triggerEvent(handlerName) {
-    if (typeof this.eventHandlers[handlerName] == "function") {
-      this.eventHandlers[handlerName](this.properties.value);
-    }
-  },
-
-  _toggleCapsLock() {
-    this.properties.capsLock = !this.properties.capsLock;
-
-    for (const key of this.elements.keys) {
-      if (key.childElementCount === 0) {
-        key.textContent = this.properties.capsLock
-          ? key.textContent.toUpperCase()
-          : key.textContent.toLowerCase();
-      }
-    }
-  },
-  
+  }
 };
 
 window.addEventListener("DOMContentLoaded", function () {
