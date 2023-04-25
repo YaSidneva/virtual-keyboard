@@ -55,7 +55,8 @@ body {
     background-color: #bdcdd6;
 }
 
-.key:active {
+.key:active,
+.button-active {
   background: #bdcdd6;
 }
 

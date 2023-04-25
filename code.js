@@ -1,5 +1,10 @@
-const Keyboard = {
+function Key(value, upperCasable = true, eventKey = value) {
+  this.eventKey = eventKey;
+  this.value = value;
+  this.upperCasable = upperCasable;
+}
 
+const Keyboard = {
   init() {
     //Create textatea
     const textarea = document.createElement("textarea");
@@ -17,84 +22,85 @@ const Keyboard = {
   _createKeys() {
     const fragment = document.createDocumentFragment();
     const keyLayout = [
-      "`",
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-      "9",
-      "0",
-      "-",
-      "=",
-      "Backspace",
-      "Tab",
-      "q",
-      "w",
-      "e",
-      "r",
-      "t",
-      "y",
-      "u",
-      "i",
-      "o",
-      "p",
-      "[",
-      "]",
-      "\\",
-      "DEL",
-      "Caps Lock",
-      "a",
-      "s",
-      "d",
-      "f",
-      "g",
-      "h",
-      "j",
-      "k",
-      "l",
-      ";",
-      "'",
-      "Enter",
-      "Shift",
-      "\\",
-      "z",
-      "x",
-      "c",
-      "v",
-      "b",
-      "n",
-      "m",
-      ".",
-      ",",
-      "/",
-      "↑",
-      "shift",
-      "Ctrl",
-      "Win",
-      "Alt",
-      "Space",
-      "Alt",
-      "Ctrl",
-      "←",
-      "↓",
-      "→",
+      new Key("`", false),
+      new Key("1", false),
+      new Key("2", false),
+      new Key("3", false),
+      new Key("4", false),
+      new Key("5", false),
+      new Key("6", false),
+      new Key("7", false),
+      new Key("8", false),
+      new Key("9", false),
+      new Key("0", false),
+      new Key("-", false),
+      new Key("=", false),
+      new Key("Backspace", false),
+      new Key("Tab", false),
+      new Key("q"),
+      new Key("w"),
+      new Key("e"),
+      new Key("r"),
+      new Key("t"),
+      new Key("y"),
+      new Key("u"),
+      new Key("i"),
+      new Key("o"),
+      new Key("p"),
+      new Key("[", false),
+      new Key("]", false),
+      new Key("\\", false),
+      new Key("DEL", false, "Delete"),
+      new Key("Caps Lock", false, "CapsLock"),
+      new Key("a"),
+      new Key("s"),
+      new Key("d"),
+      new Key("f"),
+      new Key("g"),
+      new Key("h"),
+      new Key("j"),
+      new Key("k"),
+      new Key("l"),
+      new Key(";", false),
+      new Key("'", false),
+      new Key("Enter", false),
+      new Key("Shift", false, "ShiftLeft"),
+      new Key("\\", false),
+      new Key("z"),
+      new Key("x"),
+      new Key("c"),
+      new Key("v"),
+      new Key("b"),
+      new Key("n"),
+      new Key("m"),
+      new Key(".", false),
+      new Key(",", false),
+      new Key("/", false),
+      new Key("↑", false),
+      new Key("shift", false, "ShiftRight"),
+      new Key("Ctrl", false, "ControlLeft"),
+      new Key("Win", false, "Meta"),
+      new Key("Alt", false, "AltLeft"),
+      new Key("Space", false, " "),
+      new Key("Alt", false, "AltRight"),
+      new Key("Ctrl", false, "ControlRight"),
+      new Key("←", false),
+      new Key("↓", false),
+      new Key("→", false),
     ];
 
     keyLayout.forEach((key) => {
       const keyElement = document.createElement("button");
       const insertLineBreak =
-        ["Backspace", "DEL", "Enter", "shift", "→"].indexOf(key) !== -1;
+        ["Backspace", "DEL", "Enter", "shift", "→"].indexOf(key.value) !== -1;
 
       keyElement.setAttribute("type", "button");
       keyElement.classList.add("key");
       const textarea = document.querySelector(".textarea");
-      keyElement.textContent = key;
+      keyElement.innerHTML = key.value;
+      keyElement.id = key.eventKey;
 
-      switch (key) {
+      switch (key.value) {
         case "Backspace":
           keyElement.classList.add("key-caps-shift-back");
           keyElement.addEventListener("click", () => {
@@ -123,18 +129,16 @@ const Keyboard = {
           break;
 
         case "Caps Lock":
-          keyElement.classList.add(
-            "key-caps-shift-back"
-          );
+          keyElement.classList.add("key-caps-shift-back");
           keyElement.innerHTML = "Caps Lock";
-          keyElement.classList.add("caps-lock-inactive")
+          keyElement.classList.add("caps-lock-inactive");
           keyElement.addEventListener("click", () => {
             if (keyElement.classList.contains("caps-lock-active")) {
               keyElement.classList.replace(
                 "caps-lock-active",
                 "caps-lock-inactive"
               );
-              document.querySelectorAll(".key-letter").forEach((key) => {
+              document.querySelectorAll(".uppercasable-key").forEach((key) => {
                 key.classList.add("upper");
               });
             } else {
@@ -142,7 +146,7 @@ const Keyboard = {
                 "caps-lock-inactive",
                 "caps-lock-active"
               );
-              document.querySelectorAll(".key-letter").forEach((key) => {
+              document.querySelectorAll(".uppercasable-key").forEach((key) => {
                 key.classList.remove("upper");
               });
             }
@@ -166,8 +170,10 @@ const Keyboard = {
           break;
 
         default:
-          keyElement.textContent = key;
-          keyElement.classList.add("key-letter");
+          keyElement.textContent = key.value;
+          if (key.upperCasable) {
+            keyElement.classList.add("uppercasable-key");
+          }
           keyElement.addEventListener("click", () => {
             textarea.value += keyElement.innerText;
           });
@@ -181,9 +187,35 @@ const Keyboard = {
       }
     });
     return fragment;
-  }
+  },
 };
 
 window.addEventListener("DOMContentLoaded", function () {
   Keyboard.init();
 });
+
+document.addEventListener(
+  "keydown",
+  (event) => {
+    let name = event.key;
+
+    if (["Shift", "Control", "Alt"].indexOf(name) !== -1) {
+      name = event.code;
+    }
+    console.log(name)
+    document.getElementById(name).classList.add("button-active");
+  },
+  false
+);
+document.addEventListener(
+  "keyup",
+  (event) => {
+    let name = event.key;
+
+    if (["Shift", "Control", "Alt"].indexOf(name) !== -1) {
+      name = event.code;
+    }
+    document.getElementById(name).classList.remove("button-active");
+  },
+  false
+);
