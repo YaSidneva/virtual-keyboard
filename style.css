@@ -43,6 +43,7 @@ body {
   font-size: 1.05rem;
   outline: none;
   cursor: pointer;
+  box-shadow: -2px -2px 4px rgb(63, 63, 63) , 2px 2px 4px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -53,11 +54,13 @@ body {
 
 .key-push {
     background-color: #bdcdd6;
+    box-shadow:inset -2px -2px 4px rgb(63, 63, 63) ,inset 2px 2px 4px black;
 }
 
 .key:active,
 .button-active {
   background: #bdcdd6;
+  box-shadow:inset -2px -2px 4px rgb(63, 63, 63) ,inset 2px 2px 4px black;
 }
 
 .key-caps-shift-back {

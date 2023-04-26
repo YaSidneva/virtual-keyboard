@@ -97,6 +97,14 @@ const Keyboard = {
       keyElement.setAttribute("type", "button");
       keyElement.classList.add("key");
       const textarea = document.querySelector(".textarea");
+      textarea.addEventListener(
+        "change",
+        function () {
+          let startPosition = textarea.selectionStart;
+          console.log(startPosition);
+        },
+        false
+      );
       keyElement.innerHTML = key.value;
       keyElement.id = key.eventKey;
 
@@ -139,7 +147,7 @@ const Keyboard = {
                 "caps-lock-inactive"
               );
               document.querySelectorAll(".uppercasable-key").forEach((key) => {
-                key.classList.add("upper");
+                key.classList.remove("upper");
               });
             } else {
               keyElement.classList.replace(
@@ -147,7 +155,7 @@ const Keyboard = {
                 "caps-lock-active"
               );
               document.querySelectorAll(".uppercasable-key").forEach((key) => {
-                key.classList.remove("upper");
+                key.classList.add("upper");
               });
             }
           });
@@ -202,7 +210,7 @@ document.addEventListener(
     if (["Shift", "Control", "Alt"].indexOf(name) !== -1) {
       name = event.code;
     }
-    console.log(name)
+    console.log(name);
     document.getElementById(name).classList.add("button-active");
   },
   false
@@ -219,3 +227,12 @@ document.addEventListener(
   },
   false
 );
+
+//let startPosition = document.querySelector(".textarea").selectionStart;
+//let endPosition = document.querySelector(".textarea").selectionEnd;
+
+/*if(startPosition == endPosition){
+    alert("The position of the cursor is (" + startPosition + "/" + document.querySelector("textarea").value.length + ")");
+}else{
+    alert("Selected text from ("+ startPosition +" to "+ endPosition + " of " + document.querySelector("textarea").value.length + ")");
+}*/
