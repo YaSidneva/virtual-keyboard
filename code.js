@@ -1,9 +1,11 @@
 /* eslint-disable semi */
-function Key (value, eventCode, upperCasable = true, eventKey = value) {
-  this.eventKey = eventKey;
-  this.eventCode = eventCode;
-  this.value = value;
-  this.upperCasable = upperCasable;
+class Key {
+  constructor (value, eventCode, upperCasable = true, eventKey = value) {
+    this.eventKey = eventKey;
+    this.eventCode = eventCode;
+    this.value = value;
+    this.upperCasable = upperCasable;
+  }
 }
 
 const keyLayoutEng = [
@@ -424,10 +426,6 @@ document.addEventListener(
 
       event.preventDefault();
       insertTextAtCursor(textarea, '\t');
-    }
-
-    if (event.altKey || event.shiftKey) {
-      event.preventDefault();
     }
 
     if (event.altKey && event.shiftKey) {
