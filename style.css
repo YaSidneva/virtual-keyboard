@@ -50,17 +50,24 @@ body {
   vertical-align: top;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
+  transition: .2s;
+}
+
+.key:hover {
+    background-color: #a6c5d1;
 }
 
 .key-push {
     background-color: #bdcdd6;
     box-shadow:inset -2px -2px 4px rgb(63, 63, 63) ,inset 2px 2px 4px black;
+    border-radius: 25px;
 }
 
 .key:active,
 .button-active {
   background: #bdcdd6;
   box-shadow:inset -2px -2px 4px rgb(63, 63, 63) ,inset 2px 2px 4px black;
+  border-radius: 25px;
 }
 
 .key-caps-shift-back {
@@ -89,4 +96,10 @@ body {
 
 .upper {
     text-transform: uppercase;
+}
+
+.lock-active {
+    background: #bdcdd6;
+  box-shadow:inset -2px -2px 4px rgb(63, 63, 63) ,inset 2px 2px 4px black;
+  border-radius: 25px;
 }
