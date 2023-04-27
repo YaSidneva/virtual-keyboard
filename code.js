@@ -6,7 +6,7 @@ function Key (value, eventCode, upperCasable = true, eventKey = value) {
   this.upperCasable = upperCasable;
 }
 
-const keyLayout = [
+const keyLayoutEng = [
   new Key('`', 'Backquote', false),
   new Key('1', 'Digit1', false),
   new Key('2', 'Digit2', false),
@@ -142,7 +142,7 @@ const keyLayoutRus = [
   new Key('→', 'ArrowDown', false)
 ];
 
-let eng = true;
+let eng = 'English';
 
 const Keyboard = {
   init () {
@@ -160,7 +160,7 @@ const Keyboard = {
       console.log(savedValue);
       eng = savedValue;
     }
-    const currentLanguage = eng ? keyLayout : keyLayoutRus;
+    const currentLanguage = eng === 'English' ? keyLayoutEng : keyLayoutRus;
 
     console.log(currentLanguage);
     keyboard.appendChild(this._createKeys(currentLanguage));
@@ -181,9 +181,9 @@ const Keyboard = {
 
   changeLanguage () {
     const keyboard = document.querySelector('.keyboard');
-    eng = !eng;
+    eng = (eng === 'English' ? 'Russian' : 'English');
     localStorage.setItem('lang', eng);
-    const currentLanguage = eng ? keyLayout : keyLayoutRus;
+    const currentLanguage = eng === 'English' ? keyLayoutEng : keyLayoutRus;
     keyboard.replaceChildren(this._createKeys(currentLanguage));
   },
 
