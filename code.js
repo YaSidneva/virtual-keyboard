@@ -181,7 +181,7 @@ const Keyboard = {
 
   changeLanguage () {
     const keyboard = document.querySelector('.keyboard');
-    eng = (eng === 'English' ? 'Russian' : 'English');
+    eng = eng === 'English' ? 'Russian' : 'English';
     localStorage.setItem('lang', eng);
     const currentLanguage = eng === 'English' ? keyLayoutEng : keyLayoutRus;
     keyboard.replaceChildren(this._createKeys(currentLanguage));
@@ -191,6 +191,11 @@ const Keyboard = {
   _createKeys (keyLayout) {
     console.log(keyLayout);
     const fragment = document.createDocumentFragment();
+    const textarea = document.querySelector('.textarea');
+
+    document.addEventListener('click', function () {
+      textarea.focus(); // устанавливаем фокус на textarea
+    });
 
     keyLayout.forEach((key) => {
       const keyElement = document.createElement('button');
@@ -199,16 +204,11 @@ const Keyboard = {
 
       keyElement.setAttribute('type', 'button');
       keyElement.classList.add('key');
-      const textarea = document.querySelector('.textarea');
 
       keyElement.innerHTML = key.value;
       keyElement.id = key.eventCode;
 
       textarea.focus();
-
-      keyElement.addEventListener('click', function () {
-        textarea.focus(); // устанавливаем фокус на textarea
-      });
 
       switch (key.value) {
         case 'Backspace':
@@ -366,80 +366,12 @@ const Keyboard = {
           break;
       }
 
-      document.addEventListener('keydown', function (event) {
-        if (event.code === 'CapsLock') {
-          if (
-            document
-              .getElementById('CapsLock')
-              .classList.contains('caps-lock-inactive')
-          ) {
-            document
-              .getElementById('CapsLock')
-              .classList.replace('caps-lock-inactive', 'caps-lock-active');
-            document.querySelectorAll('.uppercasable-key').forEach((key) => {
-              key.classList.add('upper');
-            });
-          } else {
-            document
-              .getElementById('CapsLock')
-              .classList.replace('caps-lock-active', 'caps-lock-inactive');
-            document.querySelectorAll('.uppercasable-key').forEach((key) => {
-              key.classList.remove('upper');
-            });
-          }
-        }
-
-        if (event.code === 'ShiftLeft' && !(event.altKey && event.shiftKey)) {
-          if (
-            document
-              .getElementById('ShiftLeft')
-              .classList.contains('lock-active')
-          ) {
-            keyElement.classList.replace('lock-active', 'shift-lock-inactive');
-            document.getElementById('Backquote').innerHTML = '`';
-            document.getElementById('Digit1').innerHTML = '1';
-            document.getElementById('Digit2').innerHTML = '2';
-            document.getElementById('Digit3').innerHTML = '3';
-            document.getElementById('Digit4').innerHTML = '4';
-            document.getElementById('Digit5').innerHTML = '5';
-            document.getElementById('Digit6').innerHTML = '6';
-            document.getElementById('Digit7').innerHTML = '7';
-            document.getElementById('Digit8').innerHTML = '8';
-            document.getElementById('Digit9').innerHTML = '9';
-            document.getElementById('Digit0').innerHTML = '0';
-            document.getElementById('Minus').innerHTML = '-';
-            document.getElementById('Equal').innerHTML = '=';
-          } else {
-            keyElement.classList.replace('shift-lock-inactive', 'lock-active');
-            document.getElementById('Backquote').innerHTML = '~';
-            document.getElementById('Digit1').innerHTML = '!';
-            document.getElementById('Digit2').innerHTML = '@';
-            document.getElementById('Digit3').innerHTML = '#';
-            document.getElementById('Digit4').innerHTML = '$';
-            document.getElementById('Digit5').innerHTML = '%';
-            document.getElementById('Digit6').innerHTML = '^';
-            document.getElementById('Digit7').innerHTML = '&';
-            document.getElementById('Digit8').innerHTML = '*';
-            document.getElementById('Digit9').innerHTML = '(';
-            document.getElementById('Digit0').innerHTML = ')';
-            document.getElementById('Minus').innerHTML = '_';
-            document.getElementById('Equal').innerHTML = '+';
-          }
-        }
-      });
-
       fragment.appendChild(keyElement);
 
       if (insertLineBreak) {
         fragment.appendChild(document.createElement('br'));
       }
     });
-
-    /* document.addEventListener('keydown', function(event) {
-        if (event.code == "ControlLeft" && ("AltLeft")) {
-            keyLayout = keyLayoutRus;
-        }
-      }); */
     return fragment;
   }
 };
@@ -449,23 +381,13 @@ window.addEventListener('DOMContentLoaded', function () {
 });
 
 function insertTextAtCursor (textarea, newText) {
-  // Получаем текущую позицию курсора в тексте
-
   const position = textarea.selectionStart;
-
-  // Получаем текст, который находится до позиции курсора
   const textBeforeCursor = textarea.value.slice(0, position);
-
-  // Получаем текст, который находится после позиции курсора
   const textAfterCursor = textarea.value.slice(position);
-
-  // Объединяем текст до курсора, новый текст и текст после курсора
   const newTextareaValue = textBeforeCursor + newText + textAfterCursor;
 
-  // Обновляем значение textarea
   textarea.value = newTextareaValue;
 
-  // Устанавливаем позицию курсора после добавленного текста
   textarea.selectionStart = position + newText.length;
   textarea.selectionEnd = position + newText.length;
 }
@@ -475,6 +397,27 @@ document.addEventListener(
   (event) => {
     const name = event.code;
     document.getElementById(name).classList.add('button-active');
+    if (event.code === 'CapsLock') {
+      if (
+        document
+          .getElementById('CapsLock')
+          .classList.contains('caps-lock-inactive')
+      ) {
+        document
+          .getElementById('CapsLock')
+          .classList.replace('caps-lock-inactive', 'lock-active');
+        document.querySelectorAll('.uppercasable-key').forEach((key) => {
+          key.classList.add('upper');
+        });
+      } else {
+        document
+          .getElementById('CapsLock')
+          .classList.replace('lock-active', 'caps-lock-inactive');
+        document.querySelectorAll('.uppercasable-key').forEach((key) => {
+          key.classList.remove('upper');
+        });
+      }
+    }
 
     if (event.code === 'Tab') {
       const textarea = document.querySelector('.textarea');
@@ -490,6 +433,42 @@ document.addEventListener(
     if (event.altKey && event.shiftKey) {
       event.preventDefault();
       Keyboard.changeLanguage();
+    }
+
+    if (event.shiftKey && !event.altKey) {
+      const keyElement = document
+        .getElementById(event.code);
+      if (keyElement.classList.contains('lock-active')) {
+        keyElement.classList.replace('lock-active', 'shift-lock-inactive');
+        document.getElementById('Backquote').innerHTML = '`';
+        document.getElementById('Digit1').innerHTML = '1';
+        document.getElementById('Digit2').innerHTML = '2';
+        document.getElementById('Digit3').innerHTML = '3';
+        document.getElementById('Digit4').innerHTML = '4';
+        document.getElementById('Digit5').innerHTML = '5';
+        document.getElementById('Digit6').innerHTML = '6';
+        document.getElementById('Digit7').innerHTML = '7';
+        document.getElementById('Digit8').innerHTML = '8';
+        document.getElementById('Digit9').innerHTML = '9';
+        document.getElementById('Digit0').innerHTML = '0';
+        document.getElementById('Minus').innerHTML = '-';
+        document.getElementById('Equal').innerHTML = '=';
+      } else {
+        keyElement.classList.replace('shift-lock-inactive', 'lock-active');
+        document.getElementById('Backquote').innerHTML = '~';
+        document.getElementById('Digit1').innerHTML = '!';
+        document.getElementById('Digit2').innerHTML = '@';
+        document.getElementById('Digit3').innerHTML = '#';
+        document.getElementById('Digit4').innerHTML = '$';
+        document.getElementById('Digit5').innerHTML = '%';
+        document.getElementById('Digit6').innerHTML = '^';
+        document.getElementById('Digit7').innerHTML = '&';
+        document.getElementById('Digit8').innerHTML = '*';
+        document.getElementById('Digit9').innerHTML = '(';
+        document.getElementById('Digit0').innerHTML = ')';
+        document.getElementById('Minus').innerHTML = '_';
+        document.getElementById('Equal').innerHTML = '+';
+      }
     }
   },
   false
