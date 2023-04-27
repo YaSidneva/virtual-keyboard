@@ -1,148 +1,149 @@
-function Key(value, upperCasable = true, eventKey = value) {
+function Key(value, eventCode, upperCasable = true, eventKey = value) {
   this.eventKey = eventKey;
+  this.eventCode = eventCode;
   this.value = value;
   this.upperCasable = upperCasable;
 }
 
+const keyLayout = [
+  new Key("`", "Backquote", false),
+  new Key("1", "Digit1", false),
+  new Key("2", "Digit2", false),
+  new Key("3", "Digit3", false),
+  new Key("4", "Digit4", false),
+  new Key("5", "Digit5", false),
+  new Key("6", "Digit6", false),
+  new Key("7", "Digit7", false),
+  new Key("8", "Digit8", false),
+  new Key("9", "Digit9", false),
+  new Key("0", "Digit0", false),
+  new Key("-", "Minus", false),
+  new Key("=", "Equal", false),
+  new Key("Backspace", "Backspace", false),
+  new Key("Tab", "Tab", false),
+  new Key("q", "KeyQ"),
+  new Key("w", "KeyW"),
+  new Key("e", "KeyE"),
+  new Key("r", "KeyR"),
+  new Key("t", "KeyT"),
+  new Key("y", "KeyY"),
+  new Key("u", "KeyU"),
+  new Key("i", "KeyI"),
+  new Key("o", "KeyO"),
+  new Key("p", "KeyP"),
+  new Key("[", "BracketLeft", false),
+  new Key("]", "BracketRight", false),
+  new Key("\\", "Backslash", false),
+  new Key("DEL", "Delete", false, "Delete"),
+  new Key("Caps Lock", "CapsLock", false, "CapsLock"),
+  new Key("a", "KeyA"),
+  new Key("s", "KeyS"),
+  new Key("d", "KeyD"),
+  new Key("f", "KeyF"),
+  new Key("g", "KeyG"),
+  new Key("h", "KeyH"),
+  new Key("j", "KeyJ"),
+  new Key("k", "KeyK"),
+  new Key("l", "KeyL"),
+  new Key(";", "Semicolon", false),
+  new Key("'", "Quote", false),
+  new Key("Enter", "Enter", false),
+  new Key("Shift", "ShiftLeft", false, "ShiftLeft"),
+  new Key("\\", "IntlBackslash", false),
+  new Key("z", "KeyZ"),
+  new Key("x", "KeyX"),
+  new Key("c", "KeyC"),
+  new Key("v", "KeyV"),
+  new Key("b", "KeyB"),
+  new Key("n", "KeyN"),
+  new Key("m", "KeyM"),
+  new Key(".", "Comma", false),
+  new Key(",", "Period", false),
+  new Key("/", "Slash", false),
+  new Key("↑", "ArrowUp", false, "ArrowUp"),
+  new Key("shift", "ShiftRight", false, "ShiftRight"),
+  new Key("Ctrl", "ControlLeft", false, "ControlLeft"),
+  new Key("Win", "MetaLeft", false, "Meta"),
+  new Key("Alt", "AltLeft", false, "AltLeft"),
+  new Key("Space", "Space", false, " "),
+  new Key("Alt", "AltRight", false, "AltRight"),
+  new Key("Ctrl", "ControlRight", false, "ControlRight"),
+  new Key("←", "ArrowLeft", false, "ArrowLeft"),
+  new Key("↓", "ArrowDown", false, "ArrowDown"),
+  new Key("→", "ArrowRight", false, "ArrowRight"),
+];
+
+const keyLayoutRus = [
+  new Key("`", "Backquote"),
+  new Key("1", "Digit1", false),
+  new Key("2", "Digit2", false),
+  new Key("3", "Digit3", false),
+  new Key("4", "Digit4", false),
+  new Key("5", "Digit5", false),
+  new Key("6", "Digit6", false),
+  new Key("7", "Digit7", false),
+  new Key("8", "Digit8", false),
+  new Key("9", "Digit9", false),
+  new Key("0", "Digit0", false),
+  new Key("-", "Minus", false),
+  new Key("=", "Equal", false),
+  new Key("Backspace", "Backspace", false),
+  new Key("Tab", "Tab", false),
+  new Key("й", "KeyQ"),
+  new Key("ц", "KeyW"),
+  new Key("у", "KeyE"),
+  new Key("к", "KeyR"),
+  new Key("е", "KeyT"),
+  new Key("н", "KeyY"),
+  new Key("г", "KeyU"),
+  new Key("ш", "KeyI"),
+  new Key("щ", "KeyO"),
+  new Key("з", "KeyP"),
+  new Key("х", "BracketLeft"),
+  new Key("ъ", "BracketRight"),
+  new Key("\\", "Backslash", false),
+  new Key("DEL", "Delete", false, "Delete"),
+  new Key("Caps Lock", "CapsLock", false, "CapsLock"),
+  new Key("ф", "KeyA"),
+  new Key("ы", "KeyS"),
+  new Key("в", "KeyD"),
+  new Key("а", "KeyF"),
+  new Key("п", "KeyG"),
+  new Key("р", "KeyH"),
+  new Key("о", "KeyJ"),
+  new Key("л", "KeyK"),
+  new Key("д", "KeyL"),
+  new Key("ж", "Semicolon"),
+  new Key("э", "Quote"),
+  new Key("Enter", "Enter", false),
+  new Key("Shift", "ShiftLeft", false, "ShiftLeft"),
+  new Key("\\", "IntlBackslash", false),
+  new Key("я", "KeyZ"),
+  new Key("ч", "KeyX"),
+  new Key("с", "KeyC"),
+  new Key("м", "KeyV"),
+  new Key("и", "KeyB"),
+  new Key("т", "KeyN"),
+  new Key("ь", "KeyM"),
+  new Key("б", "Comma"),
+  new Key("ю", "Period"),
+  new Key("/", "Slash", false),
+  new Key("↑", "ArrowUp", false),
+  new Key("shift", "ShiftRight", false, "ShiftRight"),
+  new Key("Ctrl", "ControlLeft", false, "ControlLeft"),
+  new Key("Win", "MetaLeft", false, "Meta"),
+  new Key("Alt", "AltLeft", false, "AltLeft"),
+  new Key("Space", "Space", false, " "),
+  new Key("Alt", "AltRight", false, "AltRight"),
+  new Key("Ctrl", "ControlRight", false, "ControlRight"),
+  new Key("←", "ArrowLeft", false),
+  new Key("↓", "ArrowRight", false),
+  new Key("→", "ArrowDown", false),
+];
+
 let eng = true;
 
 const Keyboard = {
-  keyLayout: [
-    new Key("`", false),
-    new Key("1", false),
-    new Key("2", false),
-    new Key("3", false),
-    new Key("4", false),
-    new Key("5", false),
-    new Key("6", false),
-    new Key("7", false),
-    new Key("8", false),
-    new Key("9", false),
-    new Key("0", false),
-    new Key("-", false),
-    new Key("=", false),
-    new Key("Backspace", false),
-    new Key("Tab", false),
-    new Key("q"),
-    new Key("w"),
-    new Key("e"),
-    new Key("r"),
-    new Key("t"),
-    new Key("y"),
-    new Key("u"),
-    new Key("i"),
-    new Key("o"),
-    new Key("p"),
-    new Key("[", false),
-    new Key("]", false),
-    new Key("\\", false),
-    new Key("DEL", false, "Delete"),
-    new Key("Caps Lock", false, "CapsLock"),
-    new Key("a"),
-    new Key("s"),
-    new Key("d"),
-    new Key("f"),
-    new Key("g"),
-    new Key("h"),
-    new Key("j"),
-    new Key("k"),
-    new Key("l"),
-    new Key(";", false),
-    new Key("'", false),
-    new Key("Enter", false),
-    new Key("Shift", false, "ShiftLeft"),
-    new Key("\\", false),
-    new Key("z"),
-    new Key("x"),
-    new Key("c"),
-    new Key("v"),
-    new Key("b"),
-    new Key("n"),
-    new Key("m"),
-    new Key(".", false),
-    new Key(",", false),
-    new Key("/", false),
-    new Key("↑", false, "ArrowUp"),
-    new Key("shift", false, "ShiftRight"),
-    new Key("Ctrl", false, "ControlLeft"),
-    new Key("Win", false, "Meta"),
-    new Key("Alt", false, "AltLeft"),
-    new Key("Space", false, " "),
-    new Key("Alt", false, "AltRight"),
-    new Key("Ctrl", false, "ControlRight"),
-    new Key("←", false, "ArrowLeft"),
-    new Key("↓", false, "ArrowDown"),
-    new Key("→", false, "ArrowRight"),
-  ],
-
-  keyLayoutRus: [
-    new Key("`"),
-    new Key("1", false),
-    new Key("2", false),
-    new Key("3", false),
-    new Key("4", false),
-    new Key("5", false),
-    new Key("6", false),
-    new Key("7", false),
-    new Key("8", false),
-    new Key("9", false),
-    new Key("0", false),
-    new Key("-", false),
-    new Key("=", false),
-    new Key("Backspace", false),
-    new Key("Tab", false),
-    new Key("й"),
-    new Key("ц"),
-    new Key("у"),
-    new Key("к"),
-    new Key("е"),
-    new Key("н"),
-    new Key("г"),
-    new Key("ш"),
-    new Key("щ"),
-    new Key("з"),
-    new Key("х"),
-    new Key("ъ"),
-    new Key("\\", false),
-    new Key("DEL", false, "Delete"),
-    new Key("Caps Lock", false, "CapsLock"),
-    new Key("ф"),
-    new Key("ы"),
-    new Key("в"),
-    new Key("а"),
-    new Key("п"),
-    new Key("р"),
-    new Key("о"),
-    new Key("л"),
-    new Key("д"),
-    new Key("ж"),
-    new Key("э"),
-    new Key("Enter", false),
-    new Key("Shift", false, "ShiftLeft"),
-    new Key("\\", false),
-    new Key("я"),
-    new Key("ч"),
-    new Key("с"),
-    new Key("м"),
-    new Key("и"),
-    new Key("т"),
-    new Key("ь"),
-    new Key("б"),
-    new Key("ю"),
-    new Key("/", false),
-    new Key("↑", false),
-    new Key("shift", false, "ShiftRight"),
-    new Key("Ctrl", false, "ControlLeft"),
-    new Key("Win", false, "Meta"),
-    new Key("Alt", false, "AltLeft"),
-    new Key("Space", false, " "),
-    new Key("Alt", false, "AltRight"),
-    new Key("Ctrl", false, "ControlRight"),
-    new Key("←", false),
-    new Key("↓", false),
-    new Key("→", false),
-  ],
-
   init() {
     //Create textatea
     const textarea = document.createElement("textarea");
@@ -153,7 +154,15 @@ const Keyboard = {
     const keyboard = document.createElement("div");
     keyboard.classList.add("keyboard");
     document.body.appendChild(keyboard);
-    keyboard.appendChild(this._createKeys(this.keyLayout));
+    const savedValue = localStorage.getItem("lang");
+    if (savedValue != undefined) {
+      console.log(savedValue);
+      eng = savedValue;
+    }
+    const currentLanguage = eng ? keyLayout : keyLayoutRus;
+    
+    console.log(currentLanguage);
+    keyboard.appendChild(this._createKeys(currentLanguage));
 
     const description = document.createElement("div");
     description.style.textAlign = "center";
@@ -171,12 +180,15 @@ const Keyboard = {
 
   changeLanguage() {
     const keyboard = document.querySelector(".keyboard");
-    keyboard.replaceChildren(this._createKeys(this.keyLayoutRus));
-    eng = false;
+    eng = !eng;
+    localStorage.setItem("lang", eng);
+    const currentLanguage = eng ? keyLayout : keyLayoutRus;
+    keyboard.replaceChildren(this._createKeys(currentLanguage));
   },
 
   //create keys
   _createKeys(keyLayout) {
+    console.log(keyLayout);
     const fragment = document.createDocumentFragment();
 
     keyLayout.forEach((key) => {
@@ -189,7 +201,7 @@ const Keyboard = {
       const textarea = document.querySelector(".textarea");
 
       keyElement.innerHTML = key.value;
-      keyElement.id = key.eventKey;
+      keyElement.id = key.eventCode;
 
       textarea.focus();
 
@@ -202,7 +214,6 @@ const Keyboard = {
           keyElement.classList.add("key-caps-shift-back");
           keyElement.addEventListener("click", () => {
             let chars = textarea.value.split("");
-            console.log(chars);
             chars.pop();
             textarea.value = chars.join("");
           });
@@ -278,37 +289,37 @@ const Keyboard = {
                 "lock-active",
                 "shift-lock-inactive"
               );
-              document.getElementById("`").innerHTML = "`";
-              document.getElementById("1").innerHTML = "1";
-              document.getElementById("2").innerHTML = "2";
-              document.getElementById("3").innerHTML = "3";
-              document.getElementById("4").innerHTML = "4";
-              document.getElementById("5").innerHTML = "5";
-              document.getElementById("6").innerHTML = "6";
-              document.getElementById("7").innerHTML = "7";
-              document.getElementById("8").innerHTML = "8";
-              document.getElementById("9").innerHTML = "9";
-              document.getElementById("0").innerHTML = "0";
-              document.getElementById("-").innerHTML = "-";
-              document.getElementById("=").innerHTML = "=";
+              document.getElementById("Backquote").innerHTML = "`";
+              document.getElementById("Digit1").innerHTML = "1";
+              document.getElementById("Digit2").innerHTML = "2";
+              document.getElementById("Digit3").innerHTML = "3";
+              document.getElementById("Digit4").innerHTML = "4";
+              document.getElementById("Digit5").innerHTML = "5";
+              document.getElementById("Digit6").innerHTML = "6";
+              document.getElementById("Digit7").innerHTML = "7";
+              document.getElementById("Digit8").innerHTML = "8";
+              document.getElementById("Digit9").innerHTML = "9";
+              document.getElementById("Digit0").innerHTML = "0";
+              document.getElementById("Minus").innerHTML = "-";
+              document.getElementById("Equal").innerHTML = "=";
             } else {
               keyElement.classList.replace(
                 "shift-lock-inactive",
                 "lock-active"
               );
-              document.getElementById("`").innerHTML = "~";
-              document.getElementById("1").innerHTML = "!";
-              document.getElementById("2").innerHTML = "@";
-              document.getElementById("3").innerHTML = "#";
-              document.getElementById("4").innerHTML = "$";
-              document.getElementById("5").innerHTML = "%";
-              document.getElementById("6").innerHTML = "^";
-              document.getElementById("7").innerHTML = "&";
-              document.getElementById("8").innerHTML = "*";
-              document.getElementById("9").innerHTML = "(";
-              document.getElementById("0").innerHTML = ")";
-              document.getElementById("-").innerHTML = "_";
-              document.getElementById("=").innerHTML = "+";
+              document.getElementById("Backquote").innerHTML = "~";
+              document.getElementById("Digit1").innerHTML = "!";
+              document.getElementById("Digit2").innerHTML = "@";
+              document.getElementById("Digit3").innerHTML = "#";
+              document.getElementById("Digit4").innerHTML = "$";
+              document.getElementById("Digit5").innerHTML = "%";
+              document.getElementById("Digit6").innerHTML = "^";
+              document.getElementById("Digit7").innerHTML = "&";
+              document.getElementById("Digit8").innerHTML = "*";
+              document.getElementById("Digit9").innerHTML = "(";
+              document.getElementById("Digit0").innerHTML = ")";
+              document.getElementById("Minus").innerHTML = "_";
+              document.getElementById("Equal").innerHTML = "+";
             }
           });
           break;
@@ -384,34 +395,34 @@ const Keyboard = {
               .classList.contains("lock-active")
           ) {
             keyElement.classList.replace("lock-active", "shift-lock-inactive");
-            document.getElementById("`").innerHTML = "`";
-            document.getElementById("1").innerHTML = "1";
-            document.getElementById("2").innerHTML = "2";
-            document.getElementById("3").innerHTML = "3";
-            document.getElementById("4").innerHTML = "4";
-            document.getElementById("5").innerHTML = "5";
-            document.getElementById("6").innerHTML = "6";
-            document.getElementById("7").innerHTML = "7";
-            document.getElementById("8").innerHTML = "8";
-            document.getElementById("9").innerHTML = "9";
-            document.getElementById("0").innerHTML = "0";
-            document.getElementById("-").innerHTML = "-";
-            document.getElementById("=").innerHTML = "=";
+            document.getElementById("Backquote").innerHTML = "`";
+            document.getElementById("Digit1").innerHTML = "1";
+            document.getElementById("Digit2").innerHTML = "2";
+            document.getElementById("Digit3").innerHTML = "3";
+            document.getElementById("Digit4").innerHTML = "4";
+            document.getElementById("Digit5").innerHTML = "5";
+            document.getElementById("Digit6").innerHTML = "6";
+            document.getElementById("Digit7").innerHTML = "7";
+            document.getElementById("Digit8").innerHTML = "8";
+            document.getElementById("Digit9").innerHTML = "9";
+            document.getElementById("Digit0").innerHTML = "0";
+            document.getElementById("Minus").innerHTML = "-";
+            document.getElementById("Equal").innerHTML = "=";
           } else {
             keyElement.classList.replace("shift-lock-inactive", "lock-active");
-            document.getElementById("`").innerHTML = "~";
-            document.getElementById("1").innerHTML = "!";
-            document.getElementById("2").innerHTML = "@";
-            document.getElementById("3").innerHTML = "#";
-            document.getElementById("4").innerHTML = "$";
-            document.getElementById("5").innerHTML = "%";
-            document.getElementById("6").innerHTML = "^";
-            document.getElementById("7").innerHTML = "&";
-            document.getElementById("8").innerHTML = "*";
-            document.getElementById("9").innerHTML = "(";
-            document.getElementById("0").innerHTML = ")";
-            document.getElementById("-").innerHTML = "_";
-            document.getElementById("=").innerHTML = "+";
+            document.getElementById("Backquote").innerHTML = "~";
+            document.getElementById("Digit1").innerHTML = "!";
+            document.getElementById("Digit2").innerHTML = "@";
+            document.getElementById("Digit3").innerHTML = "#";
+            document.getElementById("Digit4").innerHTML = "$";
+            document.getElementById("Digit5").innerHTML = "%";
+            document.getElementById("Digit6").innerHTML = "^";
+            document.getElementById("Digit7").innerHTML = "&";
+            document.getElementById("Digit8").innerHTML = "*";
+            document.getElementById("Digit9").innerHTML = "(";
+            document.getElementById("Digit0").innerHTML = ")";
+            document.getElementById("Minus").innerHTML = "_";
+            document.getElementById("Equal").innerHTML = "+";
           }
         }
       });
@@ -461,12 +472,7 @@ function insertTextAtCursor(textarea, newText) {
 document.addEventListener(
   "keydown",
   (event) => {
-    let name = event.key;
-
-    if (["Shift", "Control", "Alt"].indexOf(name) !== -1) {
-      name = event.code;
-    }
-    console.log(name);
+    let name = event.code;
     document.getElementById(name).classList.add("button-active");
 
     if (event.code === "Tab") {
@@ -483,7 +489,6 @@ document.addEventListener(
     if (event.altKey && event.shiftKey) {
       event.preventDefault();
       Keyboard.changeLanguage();
-      console.log("changeLanguage");
     }
   },
   false
@@ -491,24 +496,8 @@ document.addEventListener(
 document.addEventListener(
   "keyup",
   (event) => {
-    let name = event.key;
-
-    if (["Shift", "Control", "Alt"].indexOf(name) !== -1) {
-      name = event.code;
-    }
+    let name = event.code;
     document.getElementById(name).classList.remove("button-active");
   },
   false
 );
-
-let keyboardLanguage = navigator.language;
-console.log(keyboardLanguage);
-
-//let startPosition = document.querySelector(".textarea").selectionStart;
-//let endPosition = document.querySelector(".textarea").selectionEnd;
-
-/*if(startPosition == endPosition){
-    alert("The position of the cursor is (" + startPosition + "/" + document.querySelector("textarea").value.length + ")");
-}else{
-    alert("Selected text from ("+ startPosition +" to "+ endPosition + " of " + document.querySelector("textarea").value.length + ")");
-}*/
