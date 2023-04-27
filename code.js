@@ -1,6 +1,6 @@
 /* eslint-disable semi */
 class Key {
-  constructor (value, eventCode, upperCasable = true, eventKey = value) {
+  constructor(value, eventCode, upperCasable = true, eventKey = value) {
     this.eventKey = eventKey;
     this.eventCode = eventCode;
     this.value = value;
@@ -73,7 +73,7 @@ const keyLayoutEng = [
   new Key('Ctrl', 'ControlRight', false, 'ControlRight'),
   new Key('←', 'ArrowLeft', false, 'ArrowLeft'),
   new Key('↓', 'ArrowDown', false, 'ArrowDown'),
-  new Key('→', 'ArrowRight', false, 'ArrowRight')
+  new Key('→', 'ArrowRight', false, 'ArrowRight'),
 ];
 
 const keyLayoutRus = [
@@ -141,13 +141,26 @@ const keyLayoutRus = [
   new Key('Ctrl', 'ControlRight', false, 'ControlRight'),
   new Key('←', 'ArrowLeft', false),
   new Key('↓', 'ArrowRight', false),
-  new Key('→', 'ArrowDown', false)
+  new Key('→', 'ArrowDown', false),
 ];
+
+/* eslint no-param-reassign: ["error", { "props": false }] */
+function insertTextAtCursor(textarea, newText) {
+  const position = textarea.selectionStart;
+  const textBeforeCursor = textarea.value.slice(0, position);
+  const textAfterCursor = textarea.value.slice(position);
+  const newTextareaValue = textBeforeCursor + newText + textAfterCursor;
+
+  textarea.value = newTextareaValue;
+
+  textarea.selectionStart = position + newText.length;
+  textarea.selectionEnd = position + newText.length;
+}
 
 let eng = 'English';
 
 const Keyboard = {
-  init () {
+  init() {
     // Create textatea
     const textarea = document.createElement('textarea');
     textarea.classList.add('textarea');
@@ -159,13 +172,11 @@ const Keyboard = {
     document.body.appendChild(keyboard);
     const savedValue = localStorage.getItem('lang');
     if (savedValue !== undefined) {
-      console.log(savedValue);
       eng = savedValue;
     }
     const currentLanguage = eng === 'English' ? keyLayoutEng : keyLayoutRus;
 
-    console.log(currentLanguage);
-    keyboard.appendChild(this._createKeys(currentLanguage));
+    keyboard.appendChild(this.createKeys(currentLanguage));
 
     const description = document.createElement('div');
     description.style.textAlign = 'center';
@@ -176,33 +187,30 @@ const Keyboard = {
     description.appendChild(os);
 
     const placeholder = document.createElement('p');
-    placeholder.innerHTML =
-      'Для переключения языка комбинация: левыe alt + shift';
+    placeholder.innerHTML = 'Для переключения языка комбинация: левыe alt + shift';
     description.appendChild(placeholder);
   },
 
-  changeLanguage () {
+  changeLanguage() {
     const keyboard = document.querySelector('.keyboard');
     eng = eng === 'English' ? 'Russian' : 'English';
     localStorage.setItem('lang', eng);
     const currentLanguage = eng === 'English' ? keyLayoutEng : keyLayoutRus;
-    keyboard.replaceChildren(this._createKeys(currentLanguage));
+    keyboard.replaceChildren(this.createKeys(currentLanguage));
   },
 
   // create keys
-  _createKeys (keyLayout) {
-    console.log(keyLayout);
+  createKeys(keyLayout) {
     const fragment = document.createDocumentFragment();
     const textarea = document.querySelector('.textarea');
 
-    document.addEventListener('click', function () {
+    document.addEventListener('click', () => {
       textarea.focus(); // устанавливаем фокус на textarea
     });
 
     keyLayout.forEach((key) => {
       const keyElement = document.createElement('button');
-      const insertLineBreak =
-        ['Backspace', 'DEL', 'Enter', 'shift', '→'].indexOf(key.value) !== -1;
+      const insertLineBreak = ['Backspace', 'DEL', 'Enter', 'shift', '→'].indexOf(key.value) !== -1;
 
       keyElement.setAttribute('type', 'button');
       keyElement.classList.add('key');
@@ -225,20 +233,18 @@ const Keyboard = {
         case 'DEL':
           keyElement.addEventListener('click', () => {
             const currentValue = textarea.value;
-            const selectionStart = textarea.selectionStart;
-            const selectionEnd = textarea.selectionEnd;
+            const { selectionStart } = textarea;
+            const { selectionEnd } = textarea;
             if (selectionStart === selectionEnd) {
               // удаление символа после текущей позиции курсора
-              textarea.value =
-                currentValue.substring(0, selectionStart) +
-                currentValue.substring(selectionStart + 1);
+              textarea.value = currentValue.substring(0, selectionStart)
+                + currentValue.substring(selectionStart + 1);
               textarea.selectionStart = selectionEnd;
               textarea.selectionEnd = selectionEnd;
             } else {
               // удаление выделенного текста
-              textarea.value =
-                currentValue.substring(0, selectionStart) +
-                currentValue.substring(selectionEnd);
+              textarea.value = currentValue.substring(0, selectionStart)
+                + currentValue.substring(selectionEnd);
               textarea.selectionStart = selectionStart;
               textarea.selectionEnd = selectionStart;
             }
@@ -269,13 +275,13 @@ const Keyboard = {
           keyElement.addEventListener('click', () => {
             if (keyElement.classList.contains('lock-active')) {
               keyElement.classList.replace('lock-active', 'caps-lock-inactive');
-              document.querySelectorAll('.uppercasable-key').forEach((key) => {
-                key.classList.remove('upper');
+              document.querySelectorAll('.uppercasable-key').forEach((uppercasableKey) => {
+                uppercasableKey.classList.remove('upper');
               });
             } else {
               keyElement.classList.replace('caps-lock-inactive', 'lock-active');
-              document.querySelectorAll('.uppercasable-key').forEach((key) => {
-                key.classList.add('upper');
+              document.querySelectorAll('.uppercasable-key').forEach((uppercasableKey) => {
+                uppercasableKey.classList.add('upper');
               });
             }
           });
@@ -290,7 +296,7 @@ const Keyboard = {
             if (keyElement.classList.contains('lock-active')) {
               keyElement.classList.replace(
                 'lock-active',
-                'shift-lock-inactive'
+                'shift-lock-inactive',
               );
               document.getElementById('Backquote').innerHTML = '`';
               document.getElementById('Digit1').innerHTML = '1';
@@ -308,7 +314,7 @@ const Keyboard = {
             } else {
               keyElement.classList.replace(
                 'shift-lock-inactive',
-                'lock-active'
+                'lock-active',
               );
               document.getElementById('Backquote').innerHTML = '~';
               document.getElementById('Digit1').innerHTML = '!';
@@ -375,24 +381,12 @@ const Keyboard = {
       }
     });
     return fragment;
-  }
+  },
 };
 
-window.addEventListener('DOMContentLoaded', function () {
+window.addEventListener('DOMContentLoaded', () => {
   Keyboard.init();
 });
-
-function insertTextAtCursor (textarea, newText) {
-  const position = textarea.selectionStart;
-  const textBeforeCursor = textarea.value.slice(0, position);
-  const textAfterCursor = textarea.value.slice(position);
-  const newTextareaValue = textBeforeCursor + newText + textAfterCursor;
-
-  textarea.value = newTextareaValue;
-
-  textarea.selectionStart = position + newText.length;
-  textarea.selectionEnd = position + newText.length;
-}
 
 document.addEventListener(
   'keydown',
@@ -469,7 +463,7 @@ document.addEventListener(
       }
     }
   },
-  false
+  false,
 );
 document.addEventListener(
   'keyup',
@@ -477,5 +471,5 @@ document.addEventListener(
     const name = event.code;
     document.getElementById(name).classList.remove('button-active');
   },
-  false
+  false,
 );
