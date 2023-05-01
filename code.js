@@ -392,7 +392,7 @@ document.addEventListener(
   'keydown',
   (event) => {
     const name = event.code;
-    document.getElementById(name).classList.add('button-active');
+    document.getElementById(name)?.classList.add('button-active');
     if (event.code === 'CapsLock') {
       if (
         document
@@ -469,7 +469,7 @@ document.addEventListener(
   'keyup',
   (event) => {
     const name = event.code;
-    document.getElementById(name).classList.remove('button-active');
+    document.getElementById(name)?.classList.remove('button-active');
   },
   false,
 );
